@@ -4,6 +4,7 @@ export interface ILoginComponent {
   form: FormGroup
   AppURL: any
   AuthURL: any
+  returnURL: string
   ngOnInit(): void
   onSubmit(): void
 }

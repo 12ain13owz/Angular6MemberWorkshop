@@ -1,9 +1,11 @@
 import { Injectable } from "@angular/core"
 declare const $: any
+declare const swal
 
 @Injectable()
 
 export class AlertService {
+
   notify(message: string, type: string) {
     $.notify({
       message: message
@@ -53,5 +55,12 @@ export class AlertService {
       type: string = 'danger'
 
     this.notify(message, type)
+  }
+
+  confirm(message: string = 'Do you want to Delete?'): Promise<any> {
+    return swal(message, {
+      buttons: ['Cancel', 'Submit'],
+      dangerMode: true
+    })
   }
 }

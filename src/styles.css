@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import'ngx-bootstrap/datepicker/bs-datepicker.css';
 .ng-touched.ng-invalid {
   border-color: #D42941;
 }
@@ -10,4 +11,13 @@
 
 [data-notify="container"] {
   z-index: 1060 !important;
+}
+
+.theme-green .bs-datepicker-head,
+.theme-green .bs-datepicker-body table td span.selected {
+  background-color: #009688;
+}
+
+.theme-green .bs-datepicker-body table td.week span {
+  color: red;
 }

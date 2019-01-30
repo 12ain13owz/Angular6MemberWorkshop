@@ -11,7 +11,6 @@ export class AuthContentComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    App.initilaLoadPage()
   }
 
 }

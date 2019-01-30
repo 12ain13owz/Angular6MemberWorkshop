@@ -1,6 +1,6 @@
 import { Component, Renderer } from '@angular/core'
 import { FormGroup, FormBuilder, Validators } from '@angular/forms'
-import { Router } from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router'
 import { ILoginComponent } from './login.interface'
 import { AlertService } from '../../shareds/services/alert.service'
 import { ValidService } from '../../shareds/services/valid.service'
@@ -24,16 +24,21 @@ export class LoginComponent implements ILoginComponent {
     private alert: AlertService,
     private valid: ValidService,
     private acccount: AccountService,
-    private authen: AuthenService
+    private authen: AuthenService,
+    private activateRoute: ActivatedRoute
   ) {
+    this.activateRoute.params.forEach(params => {
+      this.returnURL = params.returnURL || `${AppURL.Authen}`
+    })
     this.initialCreateFormData()
-    if (this.authen.getAuthenticated)
-      this.router.navigate(['/', this.AppURL.Authen, this.AuthURL.Dashboard])
+    // if (this.authen.getAuthenticated)
+    //   this.router.navigate(['/', this.AppURL.Authen, this.AuthURL.Dashboard])
   }
 
   form: FormGroup
   AppURL = AppURL
   AuthURL = AuthURL
+  returnURL: string
 
   ngOnInit(): void {
     App.ForgotPassword()
@@ -49,7 +54,7 @@ export class LoginComponent implements ILoginComponent {
         .then(result => {
           this.authen.setAuthenticated(result.accessToken)
           this.alert.notify('Login Success.', 'success')
-          this.router.navigate(['/', this.AppURL.Authen, this.AuthURL.Dashboard])
+          this.router.navigateByUrl(this.returnURL)
         })
         .catch(error => this.alert.notify(error.Message, 'danger'))
     }

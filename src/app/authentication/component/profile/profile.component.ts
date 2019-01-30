@@ -9,6 +9,7 @@ import { AccountService } from '../../../shareds/services/account.service'
 import { AuthenService } from '../../../services/authen.service'
 import { AlertService } from '../../../shareds/services/alert.service'
 import { ValidService } from '../../../shareds/services/valid.service'
+import { ShardsService } from 'src/app/shareds/services/shareds.service'
 
 @Component({
   selector: 'app-profile',
@@ -22,10 +23,6 @@ export class ProfileComponent implements IProfileComponent {
 
   form: FormGroup
   modalRef: BsModalRef
-  positionItem: any[] = [
-    'Angular Developer',
-    'NodeJS Developer'
-  ]
 
   constructor(
     private builder: FormBuilder,
@@ -33,11 +30,14 @@ export class ProfileComponent implements IProfileComponent {
     private authen: AuthenService,
     private alert: AlertService,
     private modalService: BsModalService,
-    private valid: ValidService
+    private valid: ValidService,
+    private shareds: ShardsService
   ) {
     this.initialCreateFormData()
     this.initialLoadUpdateFormData()
   }
+
+  positionItem: string[] = this.shareds.positionItem
 
   private initialCreateFormData() {
     this.form = this.builder.group({
@@ -81,21 +81,13 @@ export class ProfileComponent implements IProfileComponent {
 
   onConvertImage(inputFile: HTMLInputElement) {
     const imageControl = this.form.controls['image']
-    const imageType = ['image/jpeg', 'image/png']
-    imageControl.setValue(null)
 
-    if (inputFile.files.length == 0) return
-    else {
-      if (imageType.indexOf(inputFile.files[0].type) < 0) {
+    this.shareds.onConvertImage(inputFile)
+      .then(result => imageControl.setValue(result))
+      .catch(error => {
         inputFile.value = null
-        return this.alert.notify('Please uplaod image .jpeg or .png', 'danger')
-      }
-
-      const reader = new FileReader()
-      reader.readAsDataURL(inputFile.files[0])
-      reader.addEventListener('load', () => {
-        imageControl.setValue(reader.result)
+        imageControl.setValue(null)
+        this.alert.notify(error.Message, 'danger')
       })
-    }
   }
 }
